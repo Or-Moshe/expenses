@@ -1,38 +1,29 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;/*changes how the width and height of elements are calculated. The width and height include the content, padding, and border, but not extend beyond them. This makes it easier to manage the size of elements, especially when adding padding or borders.*/
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html, body, #root {
+  height: 100%; /* Ensures full height of the screen */
+  font-family: Arial, sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app-layout {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  height: 100vh; /* Full height of the viewport */
+}
+
+.sidebar-layout {
+  width: 250px; /* Width of the side nav bar */
+  background-color: #2c3e50;
   color: white;
+  padding: 20px;
 }
 
-.App-link {
-  color: #61dafb;
-}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.content-layout {
+  flex: 1; /* Takes the remaining width */
+  background-color: #ecf0f1;
+  padding: 20px;
 }
