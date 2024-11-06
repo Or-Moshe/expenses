@@ -1,15 +1,21 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
+import { useExpense } from '../AddExpense/ExpenseContext';
+import expensesCategories from '../../data/expensesCategories';
+import styles from'./Dashboard.module.css';
 
-const Dashboard = () => {
+const Dashboard = ({header}) => {
 
+  const { expenses } = useExpense();
+
+  console.log(expensesCategories);
   const chartOptions = {
     chart: {
       type: 'bar',
       stacked: false, // Set to false for grouped columns
     },
     xaxis: {
-      categories: ['Category 1', 'Category 2', 'Category 3'], // Categories for the x-axis
+      categories: expensesCategories.map((category) => category.name), // Categories for the x-axis
     },
     plotOptions: {
       bar: {
@@ -24,25 +30,31 @@ const Dashboard = () => {
 
   const series = [
     {
-      name: 'Series 1',
+      name: 'Series אור',
       data: [10, 20, 30], // Data points for each category
     },
     {
-      name: 'Series 2',
+      name: 'Series חני',
       data: [15, 25, 35], // Data points for each category
     },
     {
-      name: 'Series 3',
+      name: 'Series יעד',
       data: [5, 10, 15], // Data points for each category
     },
   ];
 
 
   return (
-    <div className='container'>
-      <h1>Dashboard</h1>
+    <div className={styles.container}>
+      <h1>{header}</h1>
       <p>Welcome to your dashboard!</p>
-
+      <ul>
+        {expenses.map((expense, index) => (
+          <li key={index}>
+            {expense.category} - {expense.amount}
+          </li>
+        ))}
+      </ul>
       <Chart options={chartOptions} series={series} type="bar" height={400} />
 
     </div>
