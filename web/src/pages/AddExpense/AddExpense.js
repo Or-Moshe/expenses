@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import SearchableDropdown from '../../components/SearchableDropdown/SearchableDropdown';
 import expensesCategories from '../../data/expensesCategories';
+import analyzeText from "../../apis/openai";
 
 import { useExpense } from './ExpenseContext';
 
@@ -8,12 +9,12 @@ import "./AddExpense.css";
 console.log(expensesCategories);
 
 const AddExpense = () => {
+  
   const [expenseAmount, setExpenseAmount] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('Select option...');
   const [expenseMessage, setExpenseMessage] = useState('');
 
   const { addExpense } = useExpense();
-
 
   const handleAmountChange = (event) => {
     setExpenseAmount(event.target.value);
@@ -28,14 +29,18 @@ const AddExpense = () => {
     setExpenseMessage(event.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    if(expenseMessage){
+      await analyzeText();
+    }
     const expense = {"amount": expenseAmount, "category": expenseCategory};
     if(expense){
       addExpense(expense);
       
     }
-  }
+  };
+
 
   return (
     <div className="container">
