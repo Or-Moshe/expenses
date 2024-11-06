@@ -2,8 +2,6 @@ import axios from 'axios';
 
 const analyzeText = async() => {
     const headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer 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" 
     };
     const body = {
         "model": "gpt-4o-mini",
