@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import SearchableDropdown from '../../components/SearchableDropdown/SearchableDropdown2';
+import SearchableDropdown from '../../components/SearchableDropdown/SearchableDropdown';
 
 import "./AddExpense.css";
 
@@ -57,24 +57,6 @@ const AddExpense = () => {
               id="id"
               handleChange={handleCategoryChange}
               />
-          {/* <label htmlFor="expenseCategory-id">Category:</label>
-          <input
-            type="text"
-            placeholder="Search category..."
-
-          />
-          <select
-            id="expenseCategory-id"
-            value={expenseCategory}
-            onChange={handleCategoryChange}
-          >
-            <option value="">Select a category</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Rent">Rent</option>
-            <option value="Utilities">Utilities</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Entertainment">Entertainment</option>
-          </select> */}
         </div>
 
         <textarea

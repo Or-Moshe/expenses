@@ -1,78 +1,89 @@
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef  } from "react";
 import "./SearchableDropdown.css";
 
 const SearchableDropdown = ({
-  options,
-  label,
-  id,
-  //selectedVal,
-  handleChange
-}) => {
-  const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedVal, setSelectedVal] = useState("");
+    options,
+    label,
+    id,
+    placeholder,
+    handleChange
+  }) => {
 
-  const inputRef = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [query, setQuery] = useState("");
+    const [selectedVal, setSelectedVal] = useState('');
+    const dropdownRef = useRef(null);
 
-  useEffect(() => {document.addEventListener("click", toggle);
-    return () => document.removeEventListener("click", toggle);
-  }, []);
+    const toggle = (val) => {
+        setIsOpen(val);
+    }
 
-  const selectOption = (option) => {
-    setQuery(() => "");
-    handleChange(option[label]);
-    setSelectedVal(option[label]);
-    setIsOpen((isOpen) => !isOpen);
-  };
+    const handleInputChange = (e) => {
+        setQuery(e.target.value);
+        setSelectedVal(e.target.value);
+    };
 
-  function toggle(e) {
-    setIsOpen(e && e.target === inputRef.current);
-  }
+    const handleBlur = (e) => {
+        // Check if related target (the new focused element) is within the dropdown
+        if (!dropdownRef.current.contains(e.relatedTarget)) {
+          toggle(false);
+        }
+    };
 
-  const getDisplayValue = () => {
-    if (query) return query;
-    if (selectedVal) return selectedVal;
+    const selectOption = (option) => {
+        setQuery(() => "");
+        setSelectedVal(option[label]);
+        handleChange(option[label]);
+        setIsOpen(!isOpen);
+      };
 
-    return "";
-  };
+    const filter = (options) => {
+        return options.filter((option) => option[label].toLowerCase().startsWith(query.toLowerCase()));
+    };
 
-  const filter = (options) => {
-    return options.filter((option) => option[label].toLowerCase().indexOf(query.toLowerCase()) > -1);
-  };
+    const keyPress = (e) => {
+        debugger;
+    };
+    
+    return (
+        <div
+            className="dropdown"
+            ref={dropdownRef}
+            tabIndex="0" 
+            onFocus={() => toggle(true)}
+            onBlur={handleBlur}
+        >
+            <div className="selected-value">
+                <input
+                    type="text"
+                    placeholder={placeholder}
+                    value={selectedVal}
+                    onChange={handleInputChange}
+                    onClick={() => toggle(true)}
+                    />
 
-  return (
-    <div className="dropdown">
-        <div className="selected-value">
-          <input
-            ref={inputRef}
-            type="text"
-            value={getDisplayValue()}
-            name="searchTerm"
-            onChange={(e) => {
-              setQuery(e.target.value);
-              handleChange(e.target.value);
-              setSelectedVal(e.target.value);
-            }}
-            onClick={toggle}
-          />
-        <div className={`arrow ${isOpen ? "open" : ""}`}></div>
-      </div>
-
-      <div className={`options ${isOpen ? "open" : ""}`}>
-         {filter(options).map((option, index) => {
-          return (
-            <div
-              onClick={() => selectOption(option)}
-              className={`option ${option[label] === selectedVal ? "selected" : ""}`}
-              key={`${id}-${index}`}
-            >
-              {option[label]}
+                <div className={`arrow ${isOpen ? "open" : ""}`}></div>
             </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+            
+            {isOpen && 
+                <div className={`options ${isOpen ? "open" : ""}`}>
+                    {filter(options).map((option, index) => {
+                        return (
+                            <div    
+                                key={`${index}`}
+                                className="option"
+                                onClick={() => selectOption(option)}
+                                onKeyDown={(e) => keyPress(e)}
+                                onKeyUp={(e) => keyPress(e)}>
+                                    
+                                {option[label]} {index}
+                            </div>
+                        );
+                    })}
+                </div>
+            }
+        </div>
+    );
+}
 
 export default SearchableDropdown;
