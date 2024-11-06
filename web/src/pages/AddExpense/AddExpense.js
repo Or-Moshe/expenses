@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import SearchableDropdown from '../../components/SearchableDropdown/SearchableDropdown';
+import SearchableDropdown from '../../components/SearchableDropdown/SearchableDropdown2';
 
 import "./AddExpense.css";
 
@@ -52,9 +52,9 @@ const AddExpense = () => {
         <div className="form-group">
           <SearchableDropdown 
               options={options}
+              placeholder="Search"
               label="name"
               id="id"
-              value={expenseCategory}
               handleChange={handleCategoryChange}
               />
           {/* <label htmlFor="expenseCategory-id">Category:</label>
