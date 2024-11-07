@@ -3,7 +3,7 @@ import SearchableDropdown from '../../components/SearchableDropdown/SearchableDr
 import expensesCategories from '../../data/expensesCategories';
 
 import { useExpense } from './ExpenseContext';
-
+//
 import "./AddExpense.css";
 console.log(expensesCategories);
 
