@@ -1,4 +1,5 @@
 // App.js
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar.js';
@@ -7,6 +8,7 @@ import AddExpense from './pages/AddExpense/AddExpense.js';
 import Reports from './pages/Reports/Reports.js'; // Create an AddExpense component
 import { ExpenseProvider } from './pages/AddExpense/ExpenseContext.js';
 import "./App.css";
+
 
 function App() {
   return (

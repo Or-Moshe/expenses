@@ -9,13 +9,14 @@ const Dashboard = ({header}) => {
   const { expenses } = useExpense();
 
   console.log(expensesCategories);
+  console.log('expenses', expenses);
   const chartOptions = {
     chart: {
       type: 'bar',
       stacked: false, // Set to false for grouped columns
     },
     xaxis: {
-      categories: expensesCategories.map((category) => category.name), // Categories for the x-axis
+      categories: expenses.map((ex) => ex.category), // Categories for the x-axis
     },
     plotOptions: {
       bar: {
@@ -48,13 +49,6 @@ const Dashboard = ({header}) => {
     <div className={styles.container}>
       <h1>{header}</h1>
       <p>Welcome to your dashboard!</p>
-      <ul>
-        {expenses.map((expense, index) => (
-          <li key={index}>
-            {expense.category} - {expense.amount}
-          </li>
-        ))}
-      </ul>
       <Chart options={chartOptions} series={series} type="bar" height={400} />
 
     </div>

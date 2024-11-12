@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import SearchableDropdown from '../../components/SearchableDropdown/SearchableDropdown';
+import PacmanLoader from "react-spinners/PacmanLoader";
 import expensesCategories from '../../data/expensesCategories';
+import { getExpenseDetails } from '../../callouts/server';
 
 import { useExpense } from './ExpenseContext';
 //
@@ -11,7 +13,10 @@ const AddExpense = () => {
   const [expenseAmount, setExpenseAmount] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('Select option...');
   const [expenseMessage, setExpenseMessage] = useState('');
+  const [expenseDetails, setExpenseDetails] = useState([]);
+  
 
+  const [loading, setLoading] = useState(false);
   const { addExpense } = useExpense();
 
 
@@ -28,12 +33,22 @@ const AddExpense = () => {
     setExpenseMessage(event.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
+    setLoading(true);
     e.preventDefault();
     const expense = {"amount": expenseAmount, "category": expenseCategory};
     if(expense){
-      addExpense(expense);
-      
+      const expenses = await getExpenseDetails("yesterday i bought a shirt in 200 shekels. today i was at a restaurant and i ate hamburgar cost 70 shekels.");
+      console.log(expenses);
+      if(expenses){
+        setExpenseDetails(expenses);
+        expenses.forEach((ex) => {
+          
+          addExpense(ex);
+        });
+      }
+
+      setLoading(false);
     }
   }
 
@@ -79,9 +94,18 @@ const AddExpense = () => {
             className="textarea-field"
           ></textarea>
         </div>
-
         <button type="submit" className="submit-button">Add Expense</button>
+
+        <div className="loading">
+          <PacmanLoader 
+            size="25"
+            color="#344feb"
+            loading={loading}
+            speedMultiplier="0.5"/>
+        </div>
       </form>
+
+
     </div>
 
 
