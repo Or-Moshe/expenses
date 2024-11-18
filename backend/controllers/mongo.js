@@ -2,7 +2,7 @@ const mongoose =  require('mongoose');
 const profileSchema = require('../models/Expense');
 
 const { profileId, expenses } = {
-    "profileId": "Hani",
+    "profileId": "Or",
     "expenses": [
       {
         "category": "Groceries",
@@ -33,7 +33,8 @@ const { profileId, expenses } = {
 exports.addExpenses = async (req, res) => {
    
     try {
-      // Dynamically create a model for the given profileId
+      //Creates a model dynamically with the name of the profileId, linking it to the collection named profileId.
+      //Uses the profileSchema to define the structure of documents within this collection
       const ProfileModel = mongoose.model(profileId, profileSchema, profileId);
   
       // Find or create the profile document for this profileId
@@ -86,4 +87,27 @@ exports.addExpenses = async (req, res) => {
       console.error("Error adding expenses:", error);
       res.status(500).json({ message: 'Error adding expenses' });
     }
+};
+
+exports.getExpensesForProfileList = async (req, res) => {
+  const profileIds  = ['Hani', 'Or']//req.body; // Array of profileIds
+
+  try {
+    // Prepare an array of promises for fetching data from each profile collection
+    const fetchExpensesPromises = profileIds.map(profileId => {
+      const ProfileModel = mongoose.model(profileId, profileSchema, profileId);
+      return ProfileModel.findOne().then(profileData => ({ profileId, data: profileData }));
+    });
+
+    // Run all queries in parallel
+    const selectedExpenses = await Promise.all(fetchExpensesPromises);
+
+    // Filter out any null results if a profile doesn’t exist
+    const filteredExpenses = selectedExpenses.filter(expense => expense.data !== null);
+
+    res.status(200).json(filteredExpenses);
+  } catch (error) {
+    console.error("Error fetching expenses for specified profiles:", error);
+    res.status(500).json({ message: 'Error fetching expenses for specified profiles' });
+  }
 };

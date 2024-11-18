@@ -4,7 +4,7 @@ import { useExpense } from '../AddExpense/ExpenseContext';
 import expensesCategories from '../../data/expensesCategories';
 import styles from'./Dashboard.module.css';
 
-const Dashboard = ({header}) => {
+const Dashboard = ({ header, categories }) => {
 
   const { expenses } = useExpense();
 
@@ -16,7 +16,7 @@ const Dashboard = ({header}) => {
       stacked: false, // Set to false for grouped columns
     },
     xaxis: {
-      categories: expenses.map((ex) => ex.category), // Categories for the x-axis
+      categories: categories//expenses.map((ex) => ex.category), // Categories for the x-axis
     },
     plotOptions: {
       bar: {
