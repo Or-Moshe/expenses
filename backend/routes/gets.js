@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const { getExpensesDetails } = require('../controllers/openai');
-const { addExpenses, getExpensesForProfileList } = require('../controllers/mongo');
+const { storeExpenses, getExpensesForProfileList } = require('../controllers/mongo');
 
-router.get('/getExpensesDetails', getExpensesDetails, addExpenses);
+router.get('/getExpensesDetails', getExpensesDetails, storeExpenses);
 router.get('/getExpensesForProfileList', getExpensesForProfileList);
 
 // Export the router

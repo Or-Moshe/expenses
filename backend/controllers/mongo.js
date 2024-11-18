@@ -30,12 +30,15 @@ const { profileId, expenses } = {
       }
     ]
   };
-exports.addExpenses = async (req, res) => {
+exports.storeExpenses = async (req, res) => {
    
     try {
+      
+      const payload = req.expensesDetails;
+      console.log("payload ", payload);
       //Creates a model dynamically with the name of the profileId, linking it to the collection named profileId.
       //Uses the profileSchema to define the structure of documents within this collection
-      const ProfileModel = mongoose.model(profileId, profileSchema, profileId);
+      const ProfileModel = mongoose.model(payload.profile, profileSchema, payload.profile);
   
       // Find or create the profile document for this profileId
       let profile = await ProfileModel.findOne();
@@ -85,7 +88,7 @@ exports.addExpenses = async (req, res) => {
       res.status(200).json({ message: 'Expenses added successfully' });
     } catch (error) {
       console.error("Error adding expenses:", error);
-      res.status(500).json({ message: 'Error adding expenses' });
+      res.status(500).json({ message: error.message });
     }
 };
 

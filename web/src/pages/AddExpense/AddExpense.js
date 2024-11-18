@@ -2,17 +2,17 @@ import React, {useState} from 'react';
 import SearchableDropdown from '../../components/SearchableDropdown/SearchableDropdown';
 import PacmanLoader from "react-spinners/PacmanLoader";
 import expensesCategories from '../../data/expensesCategories';
-import { getExpenseDetails } from '../../callouts/server';
-
+import { storeExpenses } from '../../callouts/server';
 import { useExpense } from './ExpenseContext';
-//
 import "./AddExpense.css";
-console.log(expensesCategories);
+
+const profiles = [{ id: 1, name: "Or" }, { id: 2, name: "Hani" },];
 
 const AddExpense = () => {
   const [expenseAmount, setExpenseAmount] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('Select option...');
   const [expenseMessage, setExpenseMessage] = useState('');
+  const [profile, setProfile] = useState('');
   const [expenseDetails, setExpenseDetails] = useState([]);
   
 
@@ -29,6 +29,11 @@ const AddExpense = () => {
     setExpenseCategory(category);
   };
 
+  const handleProfileChange = (profile) => {
+    console.log("Selected profile:", profile);
+    setProfile(profile);
+  };
+
   const handleExpenseMessageChange = (event) => {
     setExpenseMessage(event.target.value);
   };
@@ -38,13 +43,13 @@ const AddExpense = () => {
     e.preventDefault();
     const expense = {"amount": expenseAmount, "category": expenseCategory};
     if(expense){
-      const expenses = await getExpenseDetails("yesterday i bought a shirt in 200 shekels. today i was at a restaurant and i ate hamburgar cost 70 shekels.");
+      const expenses = await storeExpenses({"profile": profile, message: "yesterday i bought a shirt in 200 shekels. today i was at a restaurant and i ate hamburgar cost 70 shekels."});
       console.log(expenses);
       if(expenses){
         setExpenseDetails(expenses);
-        expenses.forEach((ex) => {
+        expenses.forEach((expense) => {
           
-          addExpense(ex);
+          addExpense(expense);
         });
       }
 
@@ -58,6 +63,18 @@ const AddExpense = () => {
       <p>Welcome to your AddExpense!</p>
       <form onSubmit={handleSubmit}>
         
+      <div className="form-group">
+          <label htmlFor="profile">Name:</label>
+          <SearchableDropdown 
+            options={profiles}
+            placeholder="Search profiles"
+            label="name"
+            id="id"
+            handleChange={handleProfileChange}
+            className="dropdown"
+          />
+        </div>
+
         <div className="form-group">
           <label htmlFor="expenseAmount">Amount:</label>
           <input

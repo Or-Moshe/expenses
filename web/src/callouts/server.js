@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-export const getExpenseDetails = async(message) => {
+export const getExpenseDetails = async(payload) => {
     try {
         const response = await axios.get('http://localhost:3001/getExpensesDetails', {
-            params: { message } 
+            params: { payload } 
         });
         const jsonString = response.data.slice(response.data.indexOf('['), response.data.indexOf(']') + 1);
         return JSON.parse(jsonString);
@@ -23,6 +23,20 @@ export const getExpensesForProfileList = async(message) => {
             throw response.statusText; 
         }
         return response.data;
+    } catch (error) {
+        console.error('There was an error!', error);
+        throw error; 
+    }
+};
+
+export const storeExpenses = async({profile, message}) => {
+    try {
+        const body = {
+            "message": "Please provide the categories and prices from the following sentence as plain JSON data without markdown or code block formatting: 'Yesterday I bought a shirt for 200 shekels. Today I was at a restaurant and ate a hamburger that cost 70 shekels.'",
+            "profile": "Hani"
+        };
+        const response = await axios.post('http://localhost:3001/storeExpenses', body);
+        return response;
     } catch (error) {
         console.error('There was an error!', error);
         throw error; 
