@@ -85,7 +85,7 @@ exports.storeExpenses = async (req, res) => {
       // Save the profile with updated data
       await profile.save();
   
-      res.status(200).json({ message: 'Expenses added successfully' });
+      res.status(200).json({ message: 'Expenses added successfully', "expensesDetails": req.expensesDetails });
     } catch (error) {
       console.error("Error adding expenses:", error);
       res.status(500).json({ message: error.message });

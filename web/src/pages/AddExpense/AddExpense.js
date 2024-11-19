@@ -43,15 +43,16 @@ const AddExpense = () => {
     e.preventDefault();
     const expense = {"amount": expenseAmount, "category": expenseCategory};
     if(expense){
-      const expenses = await storeExpenses({"profile": profile, message: "yesterday i bought a shirt in 200 shekels. today i was at a restaurant and i ate hamburgar cost 70 shekels."});
-      console.log(expenses);
-      if(expenses){
-        setExpenseDetails(expenses);
-        expenses.forEach((expense) => {
+      const result = await storeExpenses({"profile": profile, message: expenseMessage});
+      console.log(result);
+      // console.log(expenses);
+      // if(expenses){
+      //   setExpenseDetails(expenses);
+      //   expenses.forEach((expense) => {
           
-          addExpense(expense);
-        });
-      }
+      //     addExpense(expense);
+      //   });
+      //}
 
       setLoading(false);
     }

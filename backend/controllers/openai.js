@@ -7,7 +7,7 @@ exports.getExpensesDetails = async (req, res, next) => {
           "Content-Type": "application/json"
         };
         console.log("*******Body:", req.body);
-        const payload = {"model": "gpt-4o-mini","messages": [{"role": "user", "content": req.body.message}]};
+        const payload = {"model": "gpt-4o-mini","messages": [{"role": "user", "content": `Please provide the categories and prices from the following sentence as plain JSON data without markdown or code block formatting: ${req.body.message}`}]};
         const response = await axios.post('https://api.openai.com/v1/chat/completions',payload, { headers });
     
         if (!response.data || !response.data.choices || response.data.choices.length === 0) {

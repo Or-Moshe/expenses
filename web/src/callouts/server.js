@@ -32,8 +32,8 @@ export const getExpensesForProfileList = async(message) => {
 export const storeExpenses = async({profile, message}) => {
     try {
         const body = {
-            "message": "Please provide the categories and prices from the following sentence as plain JSON data without markdown or code block formatting: 'Yesterday I bought a shirt for 200 shekels. Today I was at a restaurant and ate a hamburger that cost 70 shekels.'",
-            "profile": "Hani"
+            "message": message,
+            "profile": profile
         };
         const response = await axios.post('http://localhost:3001/storeExpenses', body);
         return response;
