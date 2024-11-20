@@ -15,12 +15,14 @@ exports.getExpensesDetails = async (req, res, next) => {
         }
     
         const result = response.data.choices[0].message.content;
-
+        const exractResult = JSON.parse(result.substring(result.indexOf("["), result.lastIndexOf("]")+1));
+        console.log('exractResult' , exractResult);
         if(!next){
-            return res.json({ result });
+            return res.json({ exractResult });
         }
         
-        req.expensesDetails = {"profile": req.body.profile, "expenses": response.data.choices[0].message.content};
+
+        req.expensesDetails = {"profile": req.body.profile, "expenses": exractResult};
         next();
     } catch (error) {
         console.error("Error calling OpenAI API:", error);
