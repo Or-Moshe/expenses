@@ -30,67 +30,72 @@ const { profileId, expenses } = {
       }
     ]
   };
-exports.storeExpenses = async (req, res) => {
-   
+  exports.storeExpenses = async (req, res) => {
     try {
-      
-      const payload = req.expensesDetails;
-      console.log("payload ", payload);
-      //Creates a model dynamically with the name of the profileId, linking it to the collection named profileId.
-      //Uses the profileSchema to define the structure of documents within this collection
-      const ProfileModel = mongoose.model(payload.profile, profileSchema, payload.profile);
+      // Destructure data from the request
+      const { profile, expenses } = req.expensesDetails;
+      const year = "2024"; // Replace with dynamic value if needed
+      const month = "January"; // Replace with dynamic value if needed
   
-      // Find or create the profile document for this profileId
-      let profile = await ProfileModel.findOne();
+      // Get or create the model for the profile
+      const ProfileModel = getProfileModel(profile);
   
-      // If the profile document does not exist, create it
-      if (!profile) {
-        profile = new ProfileModel({ categories: [] });
+      // Find the profile document or create a new one
+      let profileDoc = await ProfileModel.findOne();
+      if (!profileDoc) {
+        profileDoc = new ProfileModel({ years: [] });
       }
   
-      // Loop through each expense in the expenses array
       for (let expense of expenses) {
-        const { category, date, amount, description } = expense;
-  
-        // Extract year and month from the date
-        const expenseDate = new Date(date);
-        const year = expenseDate.getFullYear().toString();
-        const month = expenseDate.toLocaleString('default', { month: 'long' });
-        
-        // Find or create the category in the profile
-        let categoryObj = profile.categories.find(cat => cat.category === category);
-        if (!categoryObj) {
-          categoryObj = { category, years: [] };
-          profile.categories.push(categoryObj);
-        }
-  
-        // Find or create the year in the category
-        let yearObj = categoryObj.years.find(yr => yr.year === year);
+        // Find or create the year
+        let yearObj = profileDoc.years.find(yr => yr.year === year);
         if (!yearObj) {
           yearObj = { year, months: [] };
-          categoryObj.years.push(yearObj);
+          profileDoc.years.push(yearObj);
         }
   
-        // Find or create the month in the year
+        // Find or create the month
         let monthObj = yearObj.months.find(mn => mn.month === month);
         if (!monthObj) {
-          monthObj = { month, expenses: [] };
+          monthObj = { month, categories: [] };
           yearObj.months.push(monthObj);
         }
   
-        // Add the new expense to the month
-        monthObj.expenses.push({ date, amount, description });
+        // Find or create the category
+        let categoryObj = monthObj.categories.find(cat => cat.category === expense.category);
+        console.log('Found categoryObj:', categoryObj, 'Expense:', expense);
+  
+        if (!categoryObj) {
+          categoryObj = { category: expense.category, expenses: [] };
+          monthObj.categories.push(categoryObj);
+        }
+  
+        // Ensure the expenses array exists
+        if (!categoryObj.expenses) {
+          categoryObj.expenses = [];
+        }
+  
+        // Add the expense
+        categoryObj.expenses.push({
+          date: expense.date || new Date(), // Use the provided date or default to current date
+          price: expense.price || expense.amount,
+          currency: expense.currency || "N/A",
+          item: expense.item || "Unspecified"
+        });
+        console.log('Updated categoryObj:', categoryObj);
       }
   
-      // Save the profile with updated data
-      await profile.save();
+      // Save the updated profile document
+      await profileDoc.markModified('years'); // Mark the `years` field as modified
+      await profileDoc.save();
   
-      res.status(200).json({ message: 'Expenses added successfully', "expensesDetails": req.expensesDetails });
+      res.status(200).json({ message: 'Expenses added successfully', data: profileDoc });
     } catch (error) {
-      console.error("Error adding expenses:", error);
-      res.status(500).json({ message: error.message });
+      console.error("Error adding expense:", error);
+      res.status(500).json({ message: 'Error adding expenses', error });
     }
-};
+  };
+  
 
 exports.getExpensesForProfileList = async (req, res) => {
   const profileIds  = ['Hani', 'Or']//req.body; // Array of profileIds
