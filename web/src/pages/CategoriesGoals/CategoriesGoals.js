@@ -1,5 +1,6 @@
 import {React, useState, useEffect}  from "react";
 import "./CategoriesGoals.css";
+import Loader from "react-spinners/PuffLoader";
 import RangeSlider from 'react-bootstrap-range-slider';
 import { getCategories, saveCategoriesGoals } from '../../callouts/server';
 
@@ -14,6 +15,7 @@ const CategoriesGoals = () => {
 
     const getData = async () => {
         try {
+            setIsLoaded(true);
             const result = await getCategories();
             if(!result){
                 console.error("result is empty");
@@ -21,16 +23,19 @@ const CategoriesGoals = () => {
             }
             console.log('getCategories ', result);
             setCategories(result.data);
-            setIsLoaded(true);
+            
         } catch (error) {
             console.error(error);
+        }
+        finally{
+            setIsLoaded(false);
         }
     }
 
     const handleSubmit = async () => {
         try {
-            //setIsLoaded(true);
-            const result = await saveCategoriesGoals();
+            setIsLoaded(true);
+            const result = await saveCategoriesGoals(categories);
             if(!result){
                 console.error("result is empty");
                 return;
@@ -39,7 +44,7 @@ const CategoriesGoals = () => {
             console.error(error);
         }
         finally{
-            //setIsLoaded(false);
+            setIsLoaded(false);
         }
     }
 
@@ -52,7 +57,7 @@ const CategoriesGoals = () => {
     return (
        <div className="container">
             <h1>Set Goals</h1>
-            {isLoaded && (
+            {!isLoaded && (
             <>
                 <form onSubmit={handleSubmit}>
 
@@ -70,6 +75,13 @@ const CategoriesGoals = () => {
                         </div>
                     ))}
                     <button type="submit" className="submit-button">Save</button>
+                    <div className="loading">
+                        <Loader 
+                            size="25"
+                            color="#344feb"
+                            loading={isLoaded}
+                            speedMultiplier="0.5"/>
+                    </div>
                 </form>
             </>
         )}
