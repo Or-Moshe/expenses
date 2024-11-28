@@ -16,7 +16,7 @@ const Dashboard = ({ header, categories }) => {
       stacked: false, // Set to false for grouped columns
     },
     xaxis: {
-      categories: categories//expenses.map((ex) => ex.category), // Categories for the x-axis
+      categories: categories.map((category) => category.name), // Categories for the x-axis
     },
     plotOptions: {
       bar: {

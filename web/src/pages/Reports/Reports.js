@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from 'react';
 import Dashboard from '../Dashboard/Dashboard';
-import { getExpensesForProfileList } from '../../callouts/server';
+import { getExpensesForProfileList, getCategories } from '../../callouts/server';
 
 const Reports = () =>{
 
@@ -14,19 +14,20 @@ const Reports = () =>{
 
     const getData = async () => {
         try {
-            const result = await getExpensesForProfileList();
+            const result = await getCategories();
             if(!result){
                 console.error("result is empty");
                 return;
             }
-            console.log(result);
-            let categoriesData =[];
+            console.log('getCategories ', result);
+            /*let categoriesData =[];
             result.forEach(element => {
                 categoriesData = categoriesData.concat(element.data.categories);
             });
             const uniqueCategories = Array.from(new Set(categoriesData.map(el => el.category)));
             setCategories(uniqueCategories);
-            console.log('categories', uniqueCategories);
+            console.log('categories', uniqueCategories);*/
+            setCategories(result.data);
             setIsLoaded(true);
         } catch (error) {
             console.error(error);

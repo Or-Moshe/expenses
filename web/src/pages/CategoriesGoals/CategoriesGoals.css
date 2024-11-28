@@ -1,0 +1,14 @@
+.wrapper-cls{
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.label-cls{
+    flex-grow: 1;
+    width: 4vw;
+    text-align: start;
+}
+
+.range-cls{
+    flex-grow: 5;
+}

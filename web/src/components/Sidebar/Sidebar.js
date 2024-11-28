@@ -15,6 +15,9 @@ const Sidebar = () => {
             <Link to="/add-expense">Add Expense</Link>
           </li>
           <li>
+            <Link to="/set-goals">Set Goals</Link>
+          </li>
+          <li>
             <Link to="/budgets">Budgets</Link>
           </li>
           <li>
