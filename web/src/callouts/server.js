@@ -43,6 +43,19 @@ export const saveCategoriesGoals = async(categories) => {
     }
 };
 
+export const getExpenses = async () => {
+    try {
+        const response = await axios.get(`${domain}/getExpenses`);
+        if(response.status !== 200){
+            throw response.statusText; 
+        }
+        return response.data; 
+    } catch (error) {
+        console.error('There was an error!', error);
+        throw error; 
+    }
+};
+
 export const getExpensesForProfileList = async(message) => {
     try {
         const response = await axios.post(`${domain}/getExpensesForProfileList`, {

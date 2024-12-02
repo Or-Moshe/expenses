@@ -1,4 +1,4 @@
-const { getCategories, getUsers, saveCategoriesGoals } = require('../controllers/postgresql');
+const { getCategories, getUsers, saveCategoriesGoals, getExpenses } = require('../controllers/postgresql');
 
 const handleGetCategories = async(req, res) => {
     try {
@@ -21,7 +21,6 @@ const handleGetUsers = async(req, res) => {
 const handleSaveCategoriesGoals = async(req, res) => {
     try {
         const categories = req.body.categories;
-        console.log(categories);
         const result = await saveCategoriesGoals(categories);
         res.status(200).json({ message: 'Saved Categories Goals successfully', data: result });
     } catch (error) {
@@ -29,8 +28,18 @@ const handleSaveCategoriesGoals = async(req, res) => {
     }
 }
 
+const handleGetExpenses = async(req, res) => {
+    try {
+        const result = await getExpenses();
+        res.status(200).json({ message: 'fetched successfully', data: result });
+    } catch (error) {
+        res.status(200).json({ message: 'fetched failed', error: error });
+    }
+}
+
 module.exports = {
     handleGetCategories,
     handleGetUsers,
-    handleSaveCategoriesGoals
+    handleSaveCategoriesGoals,
+    handleGetExpenses
 }
