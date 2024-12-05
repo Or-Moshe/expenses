@@ -16,6 +16,7 @@ class ServerError extends Error {
         super(message);
         this.name = 'ServerError';
         this.status = status;
+        
         // Maintain proper stack trace in V8 (only in Node.js)
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, ServerError);
