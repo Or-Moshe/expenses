@@ -56,6 +56,22 @@ const saveCategoriesGoals = async (categories) => {
   }
 };
 
+const insertCategories = async(categories) => {
+  try {
+    const values = categories.map((categoryName) => `('${categoryName}', 0)`).join(', ');
+
+    const query = `
+      INSERT INTO categories (name, goal)
+      VALUES ${values}
+      ON CONFLICT (name) DO NOTHING;
+    `;
+    const res = await pool.query(query);
+    return res.rows;
+  } catch (error) {
+    throw new ServerError(error);
+  }
+}
+
 const getExpenses = async () => {
   try {
     const query = `
@@ -126,5 +142,6 @@ module.exports = {
     getCategories, 
     getUsers,
     saveCategoriesGoals,
-    getExpenses
+    getExpenses,
+    insertCategories
 }
