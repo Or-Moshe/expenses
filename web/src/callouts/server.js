@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const domain = "http://localhost:3001";
+const domain = "https://on-toad-tidy.ngrok-free.app";
 
 export const getExpenseDetails = async(payload) => {
     try {
@@ -46,13 +46,23 @@ export const saveCategoriesGoals = async(categories) => {
 export const getExpenses = async () => {
     try {
         const response = await axios.get(`${domain}/getExpenses`);
-        if(response.status !== 200){
-            throw response.statusText; 
+        if (response.status !== 200) {
+            throw new Error(`Unexpected response status: ${response.status} - ${response.statusText}`);
         }
         return response.data; 
     } catch (error) {
-        console.error('There was an error!', error);
-        throw error; 
+        const errorDetails = {
+            message: error.message || 'An unknown error occurred.',
+            isNetworkError: !error.response, // Check if it's a network error
+            status: error.response?.status || 'N/A',
+            statusText: error.response?.statusText || 'N/A',
+            url: error.config?.url || 'N/A',
+        };
+
+        console.error('Error fetching expenses:', errorDetails);
+
+        // Throw the structured error object
+        throw errorDetails;
     }
 };
 
@@ -78,10 +88,12 @@ export const storeExpenses = async({profile, message}) => {
             "message": message,
             "profile": profile
         };
-        const response = await axios.post(`${domain}/storeExpenses`, body);
-        return response;
+        const response = await axios.get(`${domain}/`);// await axios.post(`${domain}/storeExpenses`, body);
+        if (response.status !== 200) {
+            throw new Error(`Unexpected response status: ${response.status} - ${response.statusText}`);
+        }
+        return response.data; 
     } catch (error) {
-        console.error('There was an error!', error);
-        throw error; 
+        throw error.response?.data?.error || error.message;
     }
 };
